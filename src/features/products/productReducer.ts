@@ -5,6 +5,38 @@ type ProductActionType = setproductActionTypes;
 
 type SelectProductActionType = selectedActionTypes | removeSelectedActionType;
 
+type FetchStateActionType = {type:string,payload:any}
+
+interface FetchState {
+    loading:boolean;
+    error:null;
+}
+
+const initialFetchState:FetchState = {
+    loading:false,
+    error:null
+}
+
+export const fetchStateReducer = (state:FetchState = initialFetchState,action:FetchStateActionType)=> {
+    switch(action.type){
+        case actionTypes.FETCHREQUEST:{
+            return {...state,loading:true}
+        }        
+        case actionTypes.FETCHTSUCESS:{
+            return {...state,loading:false}
+        }        
+        case actionTypes.FETCHTFAILURE:{
+            return {...state,loading:false,error:action.payload}
+        }
+        default:{
+            return state;
+        }
+        
+    }
+}
+
+
+
 interface productState {
 products:Product[]
 }
@@ -15,7 +47,6 @@ const initialState:productState = {
 
 
 export const productReducer = (state = initialState,{type,payload}:ProductActionType)=> {
-    // console.log('reducer',payload)
     switch(type){
         case actionTypes.SET_PRODUCTS:{
             return {...state,products:payload};

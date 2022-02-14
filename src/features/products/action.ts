@@ -1,11 +1,21 @@
 import { actionTypes } from "./action-types";
+import fakeStoreApi from "../../apis/fakeStoreApi";
 
 import {setproductActionTypes,selectedActionTypes,removeSelectedActionType, Product} from './type';
 
+export const  fetchProducts = (id:string ='')=> async (dispatch:any)=> {
+dispatch({type:actionTypes.FETCHREQUEST});
+    try {
+        const response = await fakeStoreApi.get('/products');
+        dispatch({type:actionTypes.FETCHTSUCESS})
+        dispatch({type:actionTypes.SET_PRODUCTS,payload:response.data});
+    } catch (error) {
+        dispatch({type:actionTypes.FETCHTFAILURE,payload:error})
+    }
+}
 
 
 export const setProducts = (products:Product[]):setproductActionTypes=> {
-        // console.log("Action :",products)
     return {
         type:actionTypes.SET_PRODUCTS,
         payload:products
@@ -13,11 +23,14 @@ export const setProducts = (products:Product[]):setproductActionTypes=> {
 }
 
 
-export const selectedProduct = (
-product:Product):selectedActionTypes=> {
-    return {
-        type:actionTypes.SELECTED_PRODUCT,
-        payload:product
+export const fetchProduct = (id:string)=>async (dispatch:any)=> {
+    dispatch({type:actionTypes.FETCHREQUEST});
+    try {
+        const response = await fakeStoreApi.get(`/products/${id}`);
+        dispatch({type:actionTypes.FETCHTSUCESS});
+        dispatch({type:actionTypes.SELECTED_PRODUCT,payload:response.data});
+    } catch (error) {
+        dispatch({type:actionTypes.FETCHTFAILURE,payload:error})
     }
 }
 

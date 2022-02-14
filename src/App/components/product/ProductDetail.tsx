@@ -2,29 +2,23 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import {useParams} from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { removeSelectedProduct, selectedProduct } from '../../../features/products/action';
+import { removeSelectedProduct,fetchProduct } from '../../../features/products/action';
 import { RootState } from '../../store';
+import { useDispatch } from 'react-redux';
 
 const url:string = 'https://fakestoreapi.com/products/';
 
 function ProductDetail() {
   const {productId}= useParams();
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const product = useAppSelector((state)=>state.selectProduct.product);
-
-  const fetchProduct = async ()=> {
-    const response = await axios.get(url+productId);
-    dispatch(selectedProduct(response.data));
-  }
-  
+ 
   useEffect(()=>{
-    fetchProduct();
+    if(productId && productId !== "") dispatch(fetchProduct(productId));
     return ()=> {
       dispatch(removeSelectedProduct())
     }
-  },[productId])
-
-  console.log(product);
+  },[productId]);
   return (
     <div className="ui grid container">
       {
@@ -36,15 +30,15 @@ function ProductDetail() {
             <div className="ui vertical divider">AND</div>
             <div className="middle aligned row">
               <div className="column lp">
-                <img className="ui fluid image" src={product?.image} />
+                <img className="ui fluid image" src={product.image} />
               </div>
               <div className="column rp">
-                <h1>{product?.title}</h1>
+                <h1>{product.title}</h1>
                 <h2>
-                  <a className="ui teal tag label">${product?.price}</a>
+                  <a className="ui teal tag label">${product.price}</a>
                 </h2>
-                <h3 className="ui brown block header">{product?.category}</h3>
-                <p>{product?.description}</p>
+                <h3 className="ui brown block header">{product.category}</h3>
+                <p>{product.description}</p>
                 <div className="ui vertical animated button" tabIndex={0}>
                   <div className="hidden content">
                     <i className="shop icon"></i>

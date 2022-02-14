@@ -19,10 +19,6 @@ export interface selectedActionTypes {
     payload:Product;
 }
 
-type OptionalType<T> = {
-    [P in keyof T]?:T[P]
-}
 export interface removeSelectedActionType {
     type:typeof actionTypes.REMOVE_SELECTED_PRODUCT;
-    // payload:OptionalType<Product>;
 }
