@@ -1,25 +1,17 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
+import React, {useEffect } from 'react';
 import ProductComponent from './ProductComponent';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchProducts, setProducts } from '../../../features/products/action';
-import { actionTypes } from '../../../features/products/action-types';
+import { fetchProducts} from '../../../features/products/action';
 import { useDispatch } from 'react-redux';
-
-const url = 'https://fakestoreapi.com/products'
 function ProductListing() {
-  // const dispatch = useAppDispatch();
   const dispatch = useDispatch();
-  // const products = useAppSelector((state=>state.allProducs.products))
-  
-  // const fetchProducts = async ()=> {
-  // const response = await axios.get(url);
-  //     dispatch(setProducts(response.data))
 
-  // }
+  
   useEffect(()=>{
-    dispatch(fetchProducts())
-  },[])
+    const fetch = ()=>{
+      dispatch(fetchProducts())
+    }
+    fetch();
+  },[dispatch]);
   
   return (
     <div className='ui grid Fluid' style={{display:'flex',justifyContent:'center'}}>

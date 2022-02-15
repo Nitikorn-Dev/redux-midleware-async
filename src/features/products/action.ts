@@ -1,41 +1,43 @@
 import { actionTypes } from "./action-types";
 import fakeStoreApi from "../../apis/fakeStoreApi";
 
-import {setproductActionTypes,selectedActionTypes,removeSelectedActionType, Product} from './type';
+import {
+  setproductActionTypes,
+  removeSelectedActionType,
+  Product,
+} from "./type";
 
-export const  fetchProducts = (id:string ='')=> async (dispatch:any)=> {
-dispatch({type:actionTypes.FETCHREQUEST});
-    try {
-        const response = await fakeStoreApi.get('/products');
-        dispatch({type:actionTypes.FETCHTSUCESS})
-        dispatch({type:actionTypes.SET_PRODUCTS,payload:response.data});
-    } catch (error) {
-        dispatch({type:actionTypes.FETCHTFAILURE,payload:error})
-    }
-}
+export const fetchProducts = () => async (dispatch: any) => {
+  dispatch({ type: actionTypes.FETCHREQUEST });
+  try {
+    const response = await fakeStoreApi.get("/products");
+    dispatch({ type: actionTypes.FETCHTSUCESS });
+    dispatch({ type: actionTypes.SET_PRODUCTS, payload: response.data });
+  } catch (error) {
+    dispatch({ type: actionTypes.FETCHTFAILURE, payload: error });
+  }
+};
 
+export const setProducts = (products: Product[]): setproductActionTypes => {
+  return {
+    type: actionTypes.SET_PRODUCTS,
+    payload: products,
+  };
+};
 
-export const setProducts = (products:Product[]):setproductActionTypes=> {
-    return {
-        type:actionTypes.SET_PRODUCTS,
-        payload:products
-    }
-}
+export const fetchProduct = (id: any) => async (dispatch: any) => {
+    dispatch({ type: actionTypes.FETCHREQUEST });
+  try {
+    const response = await fakeStoreApi.get(`/products/${id}`);
+    dispatch({ type: actionTypes.FETCHTSUCESS });
+    dispatch({ type: actionTypes.SELECTED_PRODUCT, payload: response.data });
+  } catch (error) {
+    dispatch({ type: actionTypes.FETCHTFAILURE, payload: error });
+  }
+};
 
-
-export const fetchProduct = (id:string)=>async (dispatch:any)=> {
-    dispatch({type:actionTypes.FETCHREQUEST});
-    try {
-        const response = await fakeStoreApi.get(`/products/${id}`);
-        dispatch({type:actionTypes.FETCHTSUCESS});
-        dispatch({type:actionTypes.SELECTED_PRODUCT,payload:response.data});
-    } catch (error) {
-        dispatch({type:actionTypes.FETCHTFAILURE,payload:error})
-    }
-}
-
-export const removeSelectedProduct = ():removeSelectedActionType=> {
-    return {
-        type:actionTypes.REMOVE_SELECTED_PRODUCT
-    }
-}
+export const removeSelectedProduct = (): removeSelectedActionType => {
+  return {
+    type: actionTypes.REMOVE_SELECTED_PRODUCT,
+  };
+};

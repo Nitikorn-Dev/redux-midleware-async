@@ -1,24 +1,77 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import {useParams} from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { removeSelectedProduct,fetchProduct } from '../../../features/products/action';
-import { RootState } from '../../store';
+import { useAppSelector } from '../../hooks';
+import { 
+  removeSelectedProduct,
+  fetchProduct } from '../../../features/products/action';
 import { useDispatch } from 'react-redux';
+// import axios from 'axios';
 
-const url:string = 'https://fakestoreapi.com/products/';
+
+
+// const useProduct = (productId:{id:any})=> {
+//   const [product,setProduct] = React.useState();
+//   React.useEffect(()=>{
+//     async function fetch() {
+//       try {
+//         const response = await axios.get(`https://fakestoreapi.com/products/${productId.id}`)
+//         setProduct(response.data)
+//       } catch (error) {
+        
+//       }
+
+//     }
+//     fetch();
+//   },[productId])
+//   return  product;
+// }
 
 function ProductDetail() {
   const {productId}= useParams();
   const dispatch = useDispatch();
   const product = useAppSelector((state)=>state.selectProduct.product);
+
+  const fetchSelector = React.useCallback(()=>{
+    if(productId && productId !== "") dispatch(fetchProduct(productId))
+  },[productId,dispatch]);
+
+  const removeSelector = React.useCallback(()=>{
+    console.log('Remove ')
+    dispatch(removeSelectedProduct())
+  },[dispatch])
+  
+  // const productObject = React.useMemo(()=>{
+  //   return {id:productId}
+  // },[productId]);
+
+  // const remove = React.useCallback(()=>{
+  //   dispatch(removeSelectedProduct())
+  // },[productId]); 
+  
+  // const fetch = ()=>{
+  //   if(productId && productId !== "") dispatch(fetchProduct(productId));
+  // }
+
+  // const initFetch = React.useCallback(() => {
+  //   dispatch(fetchProduct(productObject));
+  // }, [productObject]);
  
-  useEffect(()=>{
-    if(productId && productId !== "") dispatch(fetchProduct(productId));
-    return ()=> {
-      dispatch(removeSelectedProduct())
-    }
-  },[productId]);
+  React.useEffect(()=>{
+    fetchSelector();
+      
+    // function fetch(){
+    //   if(productObject && productObject.id !== "") dispatch(fetchProduct(productObject));
+    // }
+    // fetch();
+
+// function removeSelector (){
+//   dispatch(removeSelectedProduct())
+// }
+    return ()=> removeSelector();
+     
+  },[fetchSelector,removeSelector]);
+
+
   return (
     <div className="ui grid container">
       {
@@ -30,12 +83,12 @@ function ProductDetail() {
             <div className="ui vertical divider">AND</div>
             <div className="middle aligned row">
               <div className="column lp">
-                <img className="ui fluid image" src={product.image} />
+                <img className="ui fluid image" src={product.image} alt={product.title} />
               </div>
               <div className="column rp">
                 <h1>{product.title}</h1>
                 <h2>
-                  <a className="ui teal tag label">${product.price}</a>
+                  <p className="ui teal tag label">${product.price}</p>
                 </h2>
                 <h3 className="ui brown block header">{product.category}</h3>
                 <p>{product.description}</p>
